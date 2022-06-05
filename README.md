@@ -9,6 +9,8 @@ This version is packaged with Electron and JavaScript
 
 _你目前看到的版本是由 NagaseIori 从原 Repo 中 Fork 而来并用 Github Pages 进行分发的版本，这省去了一些下载的步骤。该版本自原 Repo 未经过任何其他的修改。_
 
+_访问 Dynamaker 工具请前往此处：dym.acxblog.site_
+
 # Supported Platforms 支援平台
 Windows (64-bit), macOS (64-bit), Linux (Run Source Code with Command Prompt)
 
