@@ -15,17 +15,18 @@ _访问 Dynamaker 工具请前往[此处](https://dym.acxblog.site/app/src)_ 。
 Windows (64-bit), macOS (64-bit), Linux (Run Source Code with Command Prompt)
 
 # Creators 創作者
-Jmak, TLC, Vertrak, keanucode, Jono997, AXIS5
+Jmak, TLC, Vertrak, keanucode, Jono997, AXIS5, i0nTempest
 
 BPM change function created by whitelava3203
 
 Program originally created by omegaPi
 
-# How to Download 下載方法
-To download, please navigate to the "Releases" tab and download the latest version.
-如要下載，請導航到“Releases”並下載最新版本。
+# Screenshots 截圖
+![](https://cdn.discordapp.com/attachments/984498218400374875/984501655431176202/Screenshot_09-06-2022_175600.png)
 
-Downloading in China 中國下載鏈接: https://share.weiyun.com/yHDBo6GD
+![](https://cdn.discordapp.com/attachments/984498218400374875/984501655716393040/Screenshot_09-06-2022_175714.png)
+
+![](https://cdn.discordapp.com/attachments/984498218400374875/984501655972220948/Screenshot_09-06-2022_175740.png)
 
 # Special Thanks 特別鳴謝
 Syncable, 錫爾/Sylvex, Aploplex, 天堂EGHD, AXIS5
@@ -37,7 +38,7 @@ DynaMaker使用的所有資源是由C4Cat Entertainment Limited創建的Dynamix�
 
 DynaMaker Website Version 網頁版: https://dynamaker.tunergames.com/
 
-# Failed Experiments
+# Failed Experiments 失敗實驗
 Lane Flash - Hold and sub notes can't be detected properly
 
 Auto re-scaling - Mouse is out of canvas if re-scaled
