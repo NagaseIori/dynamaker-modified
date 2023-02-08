@@ -91,16 +91,16 @@ playView.prototype = {
 			//TLC - mp4 Support Addition
 			if(bg) {
 				ctx.drawImage(bgCanvas, 0, 0);
-				ctx.fillStyle = rgba(0, 0, 0, .7);
+				ctx.fillStyle = rgba(0, 0, 0, .81);
 				ctx.fillRect(0, windowHeight - ud, windowWidth, ud);
 				if(showStart >= 0) {
 					if(showStart < 40) {
-						ctx.fillStyle = rgba(0, 0, 0, .7)
+						ctx.fillStyle = rgba(0, 0, 0, .81)
 					} else {
-						ctx.fillStyle = rgba(0, 0, 0, showStart >= 40 && showStart <= 60 ? .7 - .035 * (showStart - 40) : .7)
+						ctx.fillStyle = rgba(0, 0, 0, showStart >= 40 && showStart <= 60 ? .81 - .035 * (showStart - 40) : .81)
 					}
 				} else {
-					ctx.fillStyle = rgba(0, 0, 0, .7)
+					ctx.fillStyle = rgba(0, 0, 0, .81)
 				}
 				ctx.fillRect(0, 0, windowWidth, windowHeight)
 			} else {
@@ -167,8 +167,12 @@ playView.prototype = {
 				audioRate = 1;//Math.random()/10;
 				audioRateCache = 1;
 				musicCtrl.playbackRate = 1;
-				musicCtrl.volume = 1;
-				musicCtrl.goplay();
+				// Avoid blowing up people's speakers
+				musicCtrl.volume = 0.8;
+				// Do not start playing right after entering editor
+				//musicCtrl.goplay();
+				// Default to editing mode
+				mainMouse.movement = "choose";
 				var realTime = 0;
 				timer = new Date();
 				baseTime = timer.getTime();
@@ -277,7 +281,7 @@ playView.prototype = {
 
 
 		ctx.globalAlpha = jb((1 - Math.abs(Math.round(thisTime / spu) - thisTime / spu) * 2) * .6 + .4, 0, 1);
-		drawJBox(ctx, 0, windowHeight - ud - 450, windowWidth, 450, windowWidth / 2, windowHeight - ud - 450, windowWidth / 2, windowHeight - ud, rgba(0, 255, 255, 0), rgba(0, 255, 255, .32));
+		drawJBox(ctx, 0, windowHeight - ud - 350, windowWidth, 350, windowWidth / 2, windowHeight - ud - 350, windowWidth / 2, windowHeight - ud, rgba(0, 255, 255, 0), rgba(0, 255, 255, .17));
 
 		//Jmak - Font, title and difficulty opacity
 		//bottomMessage
@@ -384,6 +388,7 @@ playView.prototype = {
 				ctx.fillText("(Z) hold to un/lock bar", windowWidth*0.26, windowHeight - 55);
 				ctx.fillText("(X) hold to un/lock X-axis", windowWidth*0.26, windowHeight - 30);
 				//Middle Region
+				ctx.fillText("(N) note counter", windowWidth*0.45, windowHeight - 106);
 				ctx.fillText("(←↓→)  barlines", windowWidth*0.45, windowHeight - 80);
 				ctx.fillText("(C- V+) ±division", windowWidth*0.45, windowHeight - 55);
 				ctx.fillText("(A- D+) ±[0.01]1s", windowWidth*0.45, windowHeight - 30);
@@ -396,7 +401,13 @@ playView.prototype = {
 				ctx.fillText("(Shift← →) un/redo", windowWidth*0.57, windowHeight - 55);
 				ctx.fillText("(G) Bleed Mod", windowWidth*0.57, windowHeight - 30);
 			}
+			//Jmak - Prevent the font of the note types numbers being affected by the help menu
+			ctx.font = "22px Dynamix";
+			//End of prevention
+
 			//Jmak - Legacy menu
+			//ctx.font = "22px Dynamix";
+			
 			// if (hOn) {
 			// 	ctx.textAlign = "left";
 			// 	ctx.fillStyle = "rgba(128, 128, 128, 0.8)";
@@ -1256,6 +1267,119 @@ playView.prototype = {
 
 		}
 
+		// TLC - Note Type Counter
+		if (noteTypeCounterShown) {
+			var normalNoteCount = [0, 0, 0];
+			var holdNoteCount = [0, 0, 0];
+			var chainNoteCount = [0, 0, 0];
+			var subNoteCount = [0, 0, 0];
+
+			// Calculate total number of each note type on each side
+			for (var i = 0; i < noteDown.length; ++i) {
+				if (!noteDown[i]) {
+					continue;
+				}
+
+				var currNote = noteDown[i];
+				switch (currNote.m_type) {
+					case "NORMAL":
+						normalNoteCount[0] = normalNoteCount[0] + 1;
+						break;
+					case "HOLD":
+						holdNoteCount[0] = holdNoteCount[0] + 1;
+						break;
+					case "CHAIN":
+						chainNoteCount[0] = chainNoteCount[0] + 1;
+						break;
+					case "SUB":
+						subNoteCount[0] = subNoteCount[0] + 1;
+						break;
+				}
+			}
+
+			for (var i = 0; i < noteLeft.length; ++i) {
+				if (!noteLeft[i]) {
+					continue;
+				}
+
+				var currNote = noteLeft[i];
+				switch (currNote.m_type) {
+					case "NORMAL":
+						normalNoteCount[1] = normalNoteCount[1] + 1;
+						break;
+					case "HOLD":
+						holdNoteCount[1] = holdNoteCount[1] + 1;
+						break;
+					case "CHAIN":
+						chainNoteCount[1] = chainNoteCount[1] + 1;
+						break;
+					case "SUB":
+						subNoteCount[1] = subNoteCount[1] + 1;
+						break;
+				}
+			}
+
+			for (var i = 0; i < noteRight.length; ++i) {
+				if (!noteRight[i]) {
+					continue;
+				}
+
+				var currNote = noteRight[i];
+				switch (currNote.m_type) {
+					case "NORMAL":
+						normalNoteCount[2] = normalNoteCount[2] + 1;
+						break;
+					case "HOLD":
+						holdNoteCount[2] = holdNoteCount[2] + 1;
+						break;
+					case "CHAIN":
+						chainNoteCount[2] = chainNoteCount[2] + 1;
+						break;
+					case "SUB":
+						subNoteCount[2] = subNoteCount[2] + 1;
+						break;
+				}
+			}
+
+			var totalNormalNotes = normalNoteCount.reduce(
+				(acc, currVal) => acc + currVal, 0
+			);
+
+			var totalHoldNotes = holdNoteCount.reduce(
+				(acc, currVal) => acc + currVal, 0
+			);
+
+			var totalChainNotes = chainNoteCount.reduce(
+				(acc, currVal) => acc + currVal, 0
+			);
+
+			var totalSubNotes = subNoteCount.reduce(
+				(acc, currVal) => acc + currVal, 0
+			);
+
+			var totalNotes = totalNormalNotes + totalHoldNotes + totalChainNotes + totalSubNotes;
+
+			// console.log("Total Normal Notes: " + totalNormalNotes.toString());
+			// console.log("Total Hold Notes: " + totalHoldNotes.toString());
+			// console.log("Total Chain Notes: " + totalChainNotes.toString());
+			// console.log("\nTotal Notes: " + totalNotes.toString() + "\n");
+
+			// Draw Note Icons
+			drawSingleNote(ctx, 0, 0.7 * 300 - 30, mtox(1.5, 0), 550);
+
+			drawLongNote(ctx, 0, 0.7 * 300 - 30,100, mtox(2.5, 0), 550, 0, true);
+			drawLongBoxNote(ctx, 0, 0.7 * 300 - 30,100, mtox(2.5, 0), 550);
+
+			drawSlideNote(ctx, 0, 0.7 * 300 - 30, mtox(3.5, 0), 550);
+
+			// drawNumber(combo, "left", (hitThisFrame > 0 ? 0.58 : 0.48), (hitThisFrame > 0 ? windowWidth*0.89 : windowWidth*0.88),  windowHeight*0.54);
+
+			drawNumber(totalNormalNotes, "center", 0.3, mtox(1.5, 0) + 30,  500);
+			drawNumber(totalHoldNotes, "center", 0.3, mtox(2.5, 0) + 30,  500);
+			drawNumber(totalChainNotes, "center", 0.3, mtox(3.5, 0) + 30,  500);
+
+		}
+
 		//pre anime
 		drawJBox(ctx, 0, 0, (thisTime - offset*spu)/doration*windowWidth, 30, windowWidth/2, 0, windowWidth/2, 30, rgba(0, 255, 255, 0.5), rgba(0, 255, 255, 0.0));
 		ctx.fillStyle = "#000";
@@ -1571,7 +1695,8 @@ playView.prototype = {
 					}
 
 					if (between(mainMouse.coordinate.x, rx, rx + 400) && between(mainMouse.coordinate.y, ry + 566, ry + 604) && musicCtrl) {
-						hitSoundGainNode.gain.value = Math.round((mainMouse.coordinate.x - rx)/400*100)/100;
+						// Hitsound volume: default to the same as music volume
+						hitSoundGainNode.gain.value = showHitSound ? Math.round((mainMouse.coordinate.x - rx)/400*100)/100 : musicCtrl.volume;
 					} else if (between(mainMouse.coordinate.x, rx, rx + 400) && between(mainMouse.coordinate.y, ry + 606, ry + 644) && musicCtrl) {
 						musicCtrl.volume = Math.round((mainMouse.coordinate.x - rx)/400*100)/100;
 					}
